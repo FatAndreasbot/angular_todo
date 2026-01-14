@@ -25,22 +25,20 @@ def dict_factory(cursor, row):
     return d
 
 @app.get("/")
-def get_tasks():
-    tasks = []
-
+def get_tasks(id:int|None=None) -> list[Task]|Task:
     with sqlite3.connect("tasks.db") as con:
+        sql = f'''select id, title, description, finished from tasks
+        {f"where id={id}" if id is not None else ""}
+        ;'''
         con.row_factory = dict_factory
 
         cur = con.cursor()
-        res = cur.execute('''
-            select id, title, description, finished from tasks;
-        ''')
+        res = cur.execute(sql)
 
-        for row in res.fetchall():
-            new_task = Task(**row)
-            tasks.append(new_task)
+    taskdata = [Task(**r) for r in res.fetchall()] if id is None else Task(**res.fetchone())
 
-    return tasks
+    return taskdata
+
 
 @app.post("/")
 def post_task(task:NewTask):
