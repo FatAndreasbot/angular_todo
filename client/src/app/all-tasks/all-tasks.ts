@@ -1,7 +1,7 @@
 import { Component, computed, OnInit, signal, WritableSignal } from '@angular/core';
 import { ITask } from '../task';
 import { TaskService } from '../task-service/task-service';
-import { Filter } from '../filter';
+import { IFilter } from '../filter';
 
 @Component({
   selector: 'app-all-tasks',
@@ -12,7 +12,7 @@ import { Filter } from '../filter';
 export class AllTasks implements OnInit {
   private tasks: WritableSignal<ITask[]> = signal([])
   
-  statusFilter: Filter[] = [{
+  statusFilter: IFilter[] = [{
     name: "Not selected",
     func: () => true
   }, {
@@ -23,7 +23,7 @@ export class AllTasks implements OnInit {
     func: (e) => !e.finished
   }]
   
-  selectedFilter: WritableSignal<Filter> = signal(this.statusFilter[0]);
+  selectedFilter: WritableSignal<IFilter> = signal(this.statusFilter[0]);
 
   getTasks = computed(() => {
     const f = this.selectedFilter()
