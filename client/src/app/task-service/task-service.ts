@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Task } from '../task';
+import { ITask } from '../task';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,15 +13,15 @@ export class TaskService {
     private http: HttpClient
   ) { }
 
-  getAllTasks():Observable<Task[]>{
-    return this.http.get<Task[]>(this.url)
+  getAllTasks():Observable<ITask[]>{
+    return this.http.get<ITask[]>(this.url)
   }
 
-  getTaskById(id:number):Observable<Task>{
+  getTaskById(id:number):Observable<ITask>{
     const urlWithParams = new URL(this.url)
     urlWithParams.searchParams.append("id", String(id))
 
-    const resp = this.http.get<Task>(urlWithParams.href)
+    const resp = this.http.get<ITask>(urlWithParams.href)
     return resp
   }
 }

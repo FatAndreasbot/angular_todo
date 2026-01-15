@@ -1,4 +1,4 @@
-export interface Task {
+export interface ITask {
     title:string
     id:number
     finished:boolean
