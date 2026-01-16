@@ -2,10 +2,11 @@ import { Component, computed, OnInit, signal, WritableSignal } from '@angular/co
 import { ITask } from '../task';
 import { TaskService } from '../task-service/task-service';
 import { IFilter } from '../filter';
+import { Task } from '../task/task';
 
 @Component({
   selector: 'app-all-tasks',
-  imports: [],
+  imports:[Task],
   templateUrl: './all-tasks.html',
   styleUrl: './all-tasks.css',
 })
@@ -19,7 +20,7 @@ export class AllTasks implements OnInit {
     name: "Finished",
     func: (e) => e.finished
   }, {
-    name: "ongoing",
+    name: "Ongoing",
     func: (e) => !e.finished
   }]
   
@@ -49,5 +50,15 @@ export class AllTasks implements OnInit {
     )
     if (filter)
       this.selectedFilter.set(filter)
+  }
+
+  updateTask(taskId:number, status:boolean){
+    this.tasks.update(tasks => 
+      tasks.map(task => {
+        if (task.id !== taskId) return task
+        task.finished = status
+        return task
+      })
+    )
   }
 }

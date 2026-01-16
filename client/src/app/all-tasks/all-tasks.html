@@ -2,10 +2,14 @@
     <form>
         <select #filters name="status" id="status-select" (change)="updateStatusFilter(filters.value)">
             @for (option of statusFilter; track option){
-                <option value="{{option.name}}">{{option.name}}</option>
+            <option value="{{option.name}}" [selected]="option.name === selectedFilter().name">{{option.name}}</option>
             }
         </select>
     </form>
 
-    {{getTasks().length}}
+    <ul>
+        @for (task_data of getTasks(); track task_data) {
+        <app-task [data]="task_data" (FinishedChange)="updateTask(task_data.id, $event)"></app-task>
+        }
+    </ul>
 </section>

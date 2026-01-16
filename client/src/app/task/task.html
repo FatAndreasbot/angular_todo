@@ -1,1 +1,6 @@
-<p>task works!</p>
+<li>
+    <form>
+        <input id="is-finished-{{Title()}}" type="checkbox" [checked]="Finished()" (change)="UpdateStatus($event)">
+        <label for="is-finished-{{Title()}}">{{Title()}}</label>
+    </form>
+</li>
