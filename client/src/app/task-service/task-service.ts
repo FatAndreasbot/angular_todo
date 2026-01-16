@@ -24,4 +24,11 @@ export class TaskService {
     const resp = this.http.get<ITask>(urlWithParams.href)
     return resp
   }
+
+  updateTask(taskData:ITask){
+    return this.http.put(
+      this.url,
+      taskData
+    )
+  }
 }
