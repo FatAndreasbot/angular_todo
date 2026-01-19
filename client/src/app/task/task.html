@@ -1,6 +1,7 @@
 <li>
     <form>
         <input id="is-finished-{{Title()}}" type="checkbox" [checked]="Finished()" (change)="UpdateStatus($event)">
-        <label for="is-finished-{{Title()}}">{{Title()}}</label>
+        <label for="is-finished-{{Title()}}">{{Title()}} </label>
+        <a [routerLink]="['/task', data.id]">read more</a>
     </form>
 </li>

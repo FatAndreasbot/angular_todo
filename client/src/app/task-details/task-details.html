@@ -1,0 +1,18 @@
+<div>
+    <button type="button" (click)="saveChanges(undefined)">{{redacting_mode()?"Save":"Redact"}}</button>
+</div>
+
+@if (redacting_mode()){
+    <h2>Title</h2>
+    <input type="text" [(ngModel)]="title">
+    <h2>Description</h2>
+    <textarea [(ngModel)]="description"></textarea>
+} @else {
+    <h2>Task: {{task().title}}</h2>
+    <input id="is-finished-{{task().title}}" type="checkbox" [checked]="task().finished" (change)="updateStatus()">
+    <label for="is-finished-{{task().title}}">Task is finished </label>
+    <h2>Description</h2>
+    <article>{{task().description!==""?task().description:"No description"}}</article>
+    
+
+}

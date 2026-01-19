@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
 import { ITask } from '../task';
 import { TaskService } from '../task-service/task-service';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-task',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './task.html',
   styleUrl: './task.css',
 })
