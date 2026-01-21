@@ -96,7 +96,7 @@ def delete_task(user:Annotated[User, Depends(get_current_user)], task_id:int):
 
     return {"msg":"task deleted"}
 
-@app.post("/login/")
+@app.post("/auth/")
 def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     username = form_data.username
     password = form_data.password
