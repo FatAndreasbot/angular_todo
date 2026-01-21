@@ -14,7 +14,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 auth_bearer = OAuth2PasswordBearer(
-    tokenUrl="/login/"
+    tokenUrl="/auth/"
 )
 
 def dict_factory(cursor, row):
