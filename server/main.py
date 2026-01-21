@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 import sqlite3
 from typing import Annotated, Any
-from starlette.status import HTTP_501_NOT_IMPLEMENTED, HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_401_UNAUTHORIZED
 import jwt
 from datetime import datetime, timedelta
 
