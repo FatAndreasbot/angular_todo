@@ -1,8 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.exceptions import HTTPException
 import sqlite3
+from typing import Annotated, Any
+from starlette.status import HTTP_501_NOT_IMPLEMENTED, HTTP_401_UNAUTHORIZED
+import jwt
+from datetime import datetime, timedelta
 
-from definitions import NewTask, Task
+from definitions import NewTask, Task, Token, User
+from dependencies import get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 app = FastAPI()
 
@@ -25,10 +32,11 @@ def dict_factory(cursor, row):
     return d
 
 @app.get("/")
-def get_tasks(id:int|None=None) -> list[Task]|Task:
+def get_tasks(user:Annotated[User, Depends(get_current_user)], id:int|None=None) -> list[Task]|Task:
     with sqlite3.connect("tasks.db") as con:
         sql = f'''select id, title, description, finished from tasks
-        {f"where id={id}" if id is not None else ""}
+        where user_id={user.id}
+        {f"and id={id}" if id is not None else ""}
         ;'''
         con.row_factory = dict_factory
 
@@ -39,9 +47,8 @@ def get_tasks(id:int|None=None) -> list[Task]|Task:
 
     return taskdata
 
-
 @app.post("/")
-def post_task(task:NewTask):
+def post_task(user:Annotated[User, Depends(get_current_user)], task:NewTask):
     with sqlite3.connect("tasks.db") as con:
         sql = f'''
             insert into tasks (title, description) values
@@ -62,7 +69,7 @@ def post_task(task:NewTask):
     return saved_task
 
 @app.put("/")
-def put_task(task:Task):
+def put_task(user:Annotated[User, Depends(get_current_user)], task:Task):
     with sqlite3.connect("tasks.db") as con:
         sql = f'''
             update tasks set
@@ -78,7 +85,7 @@ def put_task(task:Task):
     return {"msg":"ok"}
 
 @app.delete("/")
-def delete_task(task_id:int):
+def delete_task(user:Annotated[User, Depends(get_current_user)], task_id:int):
     with sqlite3.connect("tasks.db") as con:
         sql = f'''
             delete from tasks where id={task_id}
@@ -88,3 +95,38 @@ def delete_task(task_id:int):
         con.commit()
 
     return {"msg":"task deleted"}
+
+@app.post("/login/")
+def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    username = form_data.username
+    password = form_data.password
+
+    exp = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    with sqlite3.connect("tasks.db") as con:
+        sql = f'''
+        select 
+            id as user_id
+        from 
+            users u 
+        where 
+            u.username='{username}'
+            and u.password='{password}'
+        '''
+        con.row_factory = dict_factory
+
+        cur = con.cursor()
+        res = cur.execute(sql)
+
+    tokendata:dict[str, Any]|None = res.fetchone()
+    if tokendata is None:
+        raise HTTPException(
+            HTTP_401_UNAUTHORIZED
+        )
+    tokendata["exp"] = exp
+    token = jwt.encode(
+        payload=tokendata,
+        key=SECRET_KEY,
+        algorithm=ALGORITHM
+    ) 
+    
+    return {"access_token":token,"token_type":"bearer"}
