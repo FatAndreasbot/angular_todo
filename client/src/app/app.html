@@ -3,5 +3,8 @@
 </header>
 
 <main>
+  @if (isLoggedIn()){
+    <button id="logout-button" (click)="logOut()">Log out</button>
+  }
   <router-outlet></router-outlet>
 </main>

@@ -1,0 +1,18 @@
+<h2>Please log in</h2>
+
+<section>
+    <form>
+        <div class="field">
+            <label for="username-field">Username: </label>
+            <input required type="text" id="username-field" [(ngModel)]="userData.username" [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="field">
+            <label for="password-field">Password: </label>
+            <input requiredtype="password" id="password-field" [(ngModel)]="userData.password" [ngModelOptions]="{standalone: true}" />
+        </div>
+
+        <div class="field">
+            <button type="submit" (click)="LogIn()">Log in!</button>
+        </div>
+    </form>
+</section>

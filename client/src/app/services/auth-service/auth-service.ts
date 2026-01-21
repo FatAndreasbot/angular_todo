@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../../interfaces/user';
 import { BehaviorSubject, tap } from 'rxjs';
+import { AuthResponse } from '../../interfaces/auth-response';
 
 @Injectable({
   providedIn: 'root',
@@ -22,21 +23,26 @@ export class AuthService {
     return this.tokenSubject.value !== null
   }
 
-  login(userdata:User){
+  logIn(userdata:User){
     const userdataForm = new FormData()
     userdataForm.append("username", userdata.username)
     userdataForm.append("password", userdata.password)
 
-    return this.http.post<string>(this.url, userdataForm)
+    return this.http.post<AuthResponse>(this.url, userdataForm)
       .pipe(
         tap(val => {
-          localStorage.setItem("jwt_token", val)
-          this.tokenSubject.next(val)
+          localStorage.setItem("jwt_token", val.access_token)
+          this.tokenSubject.next(val.access_token)
         })
       )
   }
 
   getJWT(){
     return this.tokenSubject.value
+  }
+
+  logOut(){
+    this.tokenSubject.next(null)
+    localStorage.removeItem("jwt_token")
   }
 }
