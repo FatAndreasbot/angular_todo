@@ -1,7 +1,7 @@
 import { Component, computed, OnInit, signal, WritableSignal } from '@angular/core';
-import { ITask } from '../task';
-import { TaskService } from '../task-service/task-service';
-import { IFilter } from '../filter';
+import { ITask } from '../../interfaces/task';
+import { TaskService } from '../../services/task-service/task-service'; 
+import { IFilter } from '../../interfaces/filter';
 import { Task } from '../task/task';
 
 @Component({

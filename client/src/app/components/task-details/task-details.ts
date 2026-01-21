@@ -1,7 +1,7 @@
 import { Component, computed, HostListener, signal, WritableSignal } from '@angular/core';
-import { TaskService } from '../task-service/task-service';
+import { TaskService } from '../../services/task-service/task-service'; 
 import { ActivatedRoute } from '@angular/router';
-import { ITask } from '../task';
+import { ITask } from '../../interfaces/task';
 import { FormsModule } from '@angular/forms';
 
 @Component({

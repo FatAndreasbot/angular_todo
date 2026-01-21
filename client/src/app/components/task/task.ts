@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { ITask } from '../task';
-import { TaskService } from '../task-service/task-service';
+import { ITask } from '../../interfaces/task'; 
+import { TaskService } from '../../services/task-service/task-service'; 
 import { RouterLink } from "@angular/router";
 
 @Component({
